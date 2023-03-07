@@ -2,12 +2,16 @@ import './App.css';
 import './normal.css';
 import PersonalAssistant from './components/PersonalAssistant';
 import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
+import AuthDetails from './components/AuthDetails';
 
 
 function App() {
   return (
     <div className="App">
-      <PersonalAssistant />
+      {/* <PersonalAssistant /> */}
+      <SignIn/>
+      {/* <SignUp/> */}
     </div>
   );
 }

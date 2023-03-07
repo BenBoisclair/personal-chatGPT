@@ -20,15 +20,19 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/', async (req, res) => {
     const { messages } = req.body;
-    const completion = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: messages,
-        temperature: 0.9,
-        max_tokens: 300,
-    });
-    res.json({
-        message: completion.data.choices[0].message,
-    })
+    try {
+        const completion = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: messages,
+            temperature: 0.9,
+            max_tokens: 300,
+        });
+        res.json({
+            message: completion.data.choices[0].message,
+        })
+    } catch (error) {
+        console.error(error);
+    }
 });
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)

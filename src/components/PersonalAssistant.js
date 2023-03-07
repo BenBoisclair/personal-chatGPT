@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
+import AuthDetails from './AuthDetails';
+import LogOut from './LogOut';
+import LoadingChat from './LoadingChat';
 
 function PersonalAssistant() {
   const defaultPrompt = {"role": "system", "content": "You are a personal assistant that is skilled in all areas. You will answer questions for the user and help them with their tasks. Keep the answers short and to the point. You can also ask questions to help identify the user's needs even more. You will also show utmost respect to the user by calling them 'Sir'."};
@@ -72,10 +75,9 @@ function PersonalAssistant() {
   return (
     <div className="personalAI">
       <aside className="sidemenu">
-        <div className="side-menu-button" onClick={clearChat}>
-          <span>+</span>
-          New Chat
-        </div>
+        <AuthDetails name={localStorage.getItem('name')}/>
+        <NewChatButton onClick={clearChat}/>
+        <LogOut/>
       </aside>
       <section className="chatBox">
         <div className="chat-input-holder">
@@ -97,10 +99,11 @@ function PersonalAssistant() {
 
 export default PersonalAssistant;
 
-const LoadingChat = () => {
+const NewChatButton = ({onClick}) => {
   return (
-    <div>
-      <ChatMessage message={{role: 'assistant', content: 'Loading'}} loadingCheck={true} />
+    <div className="side-menu-button new-chat-button" onClick={onClick}>
+      <span>+</span>
+      New Chat
     </div>
   )
 }
