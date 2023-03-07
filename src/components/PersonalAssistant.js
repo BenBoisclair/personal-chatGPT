@@ -1,14 +1,10 @@
-import './App.css';
-import './normal.css';
 import { useState, useRef, useEffect } from 'react';
-import ChatMessage from './components/ChatMessage';
-import { BrowserRoute as Router, Switch, Route } from 'react-router-dom';
+import ChatMessage from './ChatMessage';
 
 function PersonalAssistant() {
   const defaultPrompt = {"role": "system", "content": "You are a personal assistant that is skilled in all areas. You will answer questions for the user and help them with their tasks. Keep the answers short and to the point. You can also ask questions to help identify the user's needs even more. You will also show utmost respect to the user by calling them 'Sir'."};
   const [input, setInput] = useState('');
   const [chatLog, setChatLog] = useState([defaultPrompt]);
-  const [setHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const maxRows = 10;
@@ -74,32 +70,32 @@ function PersonalAssistant() {
   }, [input, chatLog]);
 
   return (
-    <div className="App">
-    <aside className="sidemenu">
-      <div className="side-menu-button" onClick={clearChat}>
-        <span>+</span>
-        New Chat
-      </div>
-    </aside>
-    <section className="chatBox">
-      <div className="chat-input-holder">
-        <form onSubmit={handleSubmit}>
-          <textarea value={input} onChange={handleInput} className="chat-input-textarea" placeholder="Type your message here..." rows="1" onKeyDown={handleKeyDown}></textarea>
-          {/* <button className="chat-input-button">Submit</button> */}
-        </form>
-      </div>
-      <div className="chat-log scrollbar-hidden" ref={messagesEndRef}>
-        {chatLog.map((message, index) => (
-        (message.role != "system" ? <ChatMessage key={index} message={message}/> : '')
-        ))}
-        {isLoading ? <LoadingChat/> : ''}
-      </div>
-    </section>
+    <div className="personalAI">
+      <aside className="sidemenu">
+        <div className="side-menu-button" onClick={clearChat}>
+          <span>+</span>
+          New Chat
+        </div>
+      </aside>
+      <section className="chatBox">
+        <div className="chat-input-holder">
+          <form onSubmit={handleSubmit}>
+            <textarea value={input} onChange={handleInput} className="chat-input-textarea" placeholder="Type your message here..." rows="1" onKeyDown={handleKeyDown}></textarea>
+            {/* <button className="chat-input-button">Submit</button> */}
+          </form>
+        </div>
+        <div className="chat-log scrollbar-hidden" ref={messagesEndRef}>
+          {chatLog.map((message, index) => (
+          (message.role !== "system" ? <ChatMessage key={index} message={message}/> : '')
+          ))}
+          {isLoading ? <LoadingChat/> : ''}
+        </div>
+      </section>
     </div>
   );
 }
 
-export default App;
+export default PersonalAssistant;
 
 const LoadingChat = () => {
   return (

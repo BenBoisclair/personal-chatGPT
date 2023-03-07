@@ -2,7 +2,7 @@ const SideMenu = () => {
     function clearChat() {
         // setChatHistory([...chatLog]);
         setChatLog([]);
-      }
+    }
 
     return (
         <aside className="sidemenu">
