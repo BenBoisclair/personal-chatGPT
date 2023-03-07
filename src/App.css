@@ -1,5 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
+
+:root {
+  --primary-color: #1E2D59;
+  --secondary-color: #6c757d;
+  --white: #F2F2F2;
+  --black: #0D0D0D;
+}
+
+p {
+  margin-top: 0;
+}
+
+
 .App {
   text-align: center;
+  display: flex;
+  background-color: #353740;
+  color: white;
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+
+.chatBox {
+  background-color: none;
+}
+
+.sidemenu {
+  width: 260px;
+  padding: 10px;
+  background-color: #202123;
+}
+
+.side-menu-button {
+  text-align: left;
+  padding: 12px;
+  border: 1px solid white;
+  border-radius: 5px; 
+  transition: ease 0.25s all;
+}
+
+.side-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.side-menu-button span {
+  padding-left: 6px;
+  padding-right: 12px;
+}
+
+.chatBox {
+  flex: 1;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.chat-input-holder {
+  position: absolute;
+  padding-bottom: 20px;
+  padding-top: 60px;
+  background: linear-gradient(to top, rgba(53, 55, 64, 1) 65%, rgba(53, 55, 64, 0) 100%);
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.chat-input-textarea {
+  background-color: #6e6e80;
+  color: white;
+  font-size: 1em;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+  width: 85%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 10px solid #6e6e80;
+  outline: none;
+  box-sizing: border-box;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  resize: 
+  
+}
+
+.chat-input-textarea::placeholder {
+  color: white;
+}
+
+.chat-input-button {
+  position: absolute;
+}
+
+.chat-log {
+  text-align: left;
+  overflow: scroll;
+  height: 97%;
+  background-color: #353740;
+  padding-bottom: 100px;
+  scroll-behavior: smooth;
+}
+
+.chat-message.chatgpt {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.chat-message-center {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  padding: 20px 24px 16px 24px;
+}
+
+.avatar {
+  background: white;
+  border-radius: 10%;
+  width: 30px;
+  height: 30px;
+  margin-top: 3px;
+}
+
+.avatar.chatgpt {
+  background: #0da37f;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message {
+  padding-left: 40px;
+  padding-right: 40px; 
+  width: 100%;
+  line-height: 1.5em;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+code {
+  background: rgba(255, 0, 255, 0.2);
+  padding: 2px;
+}
+
+pre code {
+  background: rgba(0, 255, 255, 0.5);
+  color: black;
+  padding: 2px;
 }
 
 .App-logo {
@@ -35,4 +188,40 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.loading-container {
+  display: flex;
+}
+
+.loading-bar {
+  width: 8px;
+  height: 18px;
+  background-color: #CCC;
+  animation: loading 0.7s ease-in-out infinite;
+}
+
+@keyframes loading {
+  0% {
+    opacity: 0;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+::-webkit-scrollbar:window-inactive {
+  visibility: hidden;
+}
+
+::-webkit-resizer {
+  display: none;
 }
