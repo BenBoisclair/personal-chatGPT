@@ -17,6 +17,8 @@ function PersonalAssistant() {
   const [chatHistoryLoaded, setChatHistoryLoaded] = useState(false);
   const [currentLog, setCurrentLog] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [clearConversationsText, setClearConversationsText] = useState('Clear All Conversations');
+  const [clearConversationConfirm, setClearConversationConfirm] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const messagesEndRef = useRef(null);
@@ -113,12 +115,29 @@ function PersonalAssistant() {
       .then(() => {
         setChatHistory([]);
         setChatHistoryLoaded(true);
-        console.log('Conversations cleared');
+        setClearConversationsText('Clear All Conversations');
       })
       .catch((error) => {
         console.error('Error clearing conversations:', error);
       });
   }
+
+
+function handleClearConversationsClick() {
+  if (chatHistoryLoaded === false) {
+    return;
+  }
+  if (chatHistory.length === 0) {
+    return;
+  }
+  if (clearConversationConfirm) {
+    clearConversations();
+    setClearConversationConfirm(false);
+  } else {
+    setClearConversationsText('Are you sure?');
+    setClearConversationConfirm(true);
+  }
+}
   
   
   useEffect(() => {
@@ -137,20 +156,6 @@ function PersonalAssistant() {
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
   }, [input, chatLog]);
-
-  // useEffect(() => {
-  //   const db = getFirestore(app);
-  //   const userRef = doc(db, 'users', localStorage.getItem('uid'));
-  //   const docSnap = getDoc(userRef);
-  //   const unsubscribe = onSnapshot(docRef, (docSnap) => {
-  //     if (docSnap.exists()) {
-  //       const loadedChatHistory = docSnap.data().chatLog;
-  //       setChatHistory(loadedChatHistory);
-  //     } else {
-  //       console.log('No such document!');
-  //     }
-  //     setChatHistoryLoaded(true);
-  //   });
 
   useEffect(() => {
     async function loadChatHistory() {
@@ -197,9 +202,7 @@ function PersonalAssistant() {
             {chatLoading ? <ChatHistory chat={{name: ''}} currentLog='loading'/> : ''}
           </div> : <div className="loader"></div>}
         </div>
-        <div className="side-menu-button clear-conversation-button" onClick={clearConversations}>
-            Clear Conversations
-        </div>
+        <ClearConversationButton onClick={handleClearConversationsClick} clearConversationsText={clearConversationsText}/>
         <LogOut/>
       </aside>
       <section className="chatBox">
@@ -242,6 +245,14 @@ const NewChatButton = ({onClick}) => {
     <div className="side-menu-button new-chat-button" onClick={onClick}>
       <span>+</span>
       New Chat
+    </div>
+  )
+}
+
+const ClearConversationButton = ({onClick, clearConversationsText}) => {
+  return (
+    <div className="side-menu-button clear-conversation-button" onClick={onClick}>
+      {clearConversationsText}
     </div>
   )
 }
