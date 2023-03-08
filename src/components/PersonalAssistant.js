@@ -193,37 +193,30 @@ function handleClearConversationsClick() {
       <aside className="sidemenu">
         <AuthDetails name={localStorage.getItem('name')}/>
         <NewChatButton onClick={clearChat}/>
-        <div className='chat-history-container'>
-          {chatHistoryLoaded ?
-          <div>
-            {chatHistory.map((chat, index) => (
-              <ChatHistory keyID={index} chat={chat} onClick={setChatLogButton} currentLog={currentLog}/>
-            ))}
-            {chatLoading ? <ChatHistory chat={{name: ''}} currentLog='loading'/> : ''}
-          </div> : <div className="loader"></div>}
-        </div>
+        <ChatHistoryContainer chatHistory={chatHistory} setChatLogButton={setChatLogButton} currentLog={currentLog} chatHistoryLoaded={chatHistoryLoaded} chatLoading={chatLoading}/>
         <ClearConversationButton onClick={handleClearConversationsClick} clearConversationsText={clearConversationsText}/>
         <LogOut/>
       </aside>
       <section className="chatBox">
-        <div className="chat-input-holder">
-          <form onSubmit={handleSubmit}>
-            <textarea value={input} onChange={handleInput} className="chat-input-textarea" placeholder="Type your message here..." rows="1" onKeyDown={handleKeyDown}></textarea>
-            {/* <button className="chat-input-button">Submit</button> */}
-          </form>
-        </div>
-        <div className="chat-log scrollbar-hidden" ref={messagesEndRef}>
-          {chatLog.map((message, index) => (
-          (message.role !== "system" ? <ChatMessage keyID={index} message={message}/> : '')
-          ))}
-          {isLoading ? <LoadingChat/> : ''}
-        </div>
+        <ChatInput input={input} handleInput={handleInput} handleSubmit={handleSubmit} handleKeyDown={handleKeyDown}/>
+        {chatLog.length > 1 ? <Chat chatLog={chatLog} messagesEndRef={messagesEndRef} isLoading={isLoading}/> : <Home />}
       </section>
     </div>
   );
 }
 
 export default PersonalAssistant;
+
+const ChatInput = ({ input, handleInput, handleSubmit, handleKeyDown }) => {
+  return (
+    <div className="chat-input-holder">
+      <form onSubmit={handleSubmit}>
+        <textarea value={input} onChange={handleInput} className="chat-input-textarea" placeholder="Type your message here..." rows="1" onKeyDown={handleKeyDown}></textarea>
+        {/* <button className="chat-input-button">Submit</button> */}
+      </form>
+    </div>
+  )
+}
 
 const ChatHistory = ({ chat, keyID, onClick = null, currentLog = null}) => {
 
@@ -236,6 +229,31 @@ const ChatHistory = ({ chat, keyID, onClick = null, currentLog = null}) => {
   return (
     <div className={`chat-history-item ${currentLog === chat.id ? 'highlight' : ''} ${currentLog === 'loading' ? 'chatLoading' : ''}`} key={keyID} title={toTitleCase(chat.name)} onClick={onClick} data-id={chat.id}>
       <span>{toTitleCase(chat.name)}</span>
+    </div>
+  )
+}
+
+const ChatHistoryContainer = ({ chatHistory, setChatLogButton = null, currentLog = null, chatLoading, chatHistoryLoaded}) => {
+  return (
+    <div className='chat-history-container'>
+      {chatHistoryLoaded ?
+      <div>
+        {chatHistory.map((chat, index) => (
+          <ChatHistory keyID={index} chat={chat} onClick={setChatLogButton} currentLog={currentLog}/>
+        ))}
+        {chatLoading ? <ChatHistory chat={{name: ''}} currentLog='loading'/> : ''}
+      </div> : <div className="loader"></div>}
+    </div>
+  )
+}
+
+const Chat = ({ chatLog, messagesEndRef, isLoading}) => {
+  return (
+    <div className="chat-log scrollbar-hidden" ref={messagesEndRef}>
+      {chatLog.map((message, index) => (
+      (message.role !== "system" ? <ChatMessage keyID={index} message={message}/> : '')
+      ))}
+      {isLoading ? <LoadingChat/> : ''}
     </div>
   )
 }
@@ -253,6 +271,15 @@ const ClearConversationButton = ({onClick, clearConversationsText}) => {
   return (
     <div className="side-menu-button clear-conversation-button" onClick={onClick}>
       {clearConversationsText}
+    </div>
+  )
+}
+
+const Home = () => {
+  return (
+    <div className="home">
+      <h1>Welcome to your personal assistant</h1>
+      <p>Made by Benedict Boisclair</p>
     </div>
   )
 }
