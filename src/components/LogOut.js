@@ -13,6 +13,8 @@ const LogOut = () => {
             });
         localStorage.removeItem('email');
         localStorage.removeItem('name');
+        localStorage.removeItem('photo');
+        localStorage.removeItem('uid');
         window.location.reload();
     }
 

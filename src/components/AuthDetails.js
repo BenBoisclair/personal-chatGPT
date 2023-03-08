@@ -1,6 +1,4 @@
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import React, { useEffect, useState } from 'react';
-import { auth } from '../firebase';
+import React from 'react';
 
 const AuthDetails = ({name}) => {
     return (
