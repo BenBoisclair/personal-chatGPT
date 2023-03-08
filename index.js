@@ -5,9 +5,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 
-// import { getFirestore } from "firebase/firestore";
-// import { doc, setDoc } from "firebase/firestore";
-
 const configuration = new Configuration({
     apiKey: process.env.API_KEY,
 });
@@ -53,27 +50,6 @@ app.post('/summarize', async (req, res) => {
         console.error(error);
     }
 });
-
-// app.post('/firebase', async (req, res) => {
-//     try {
-//         const { email, name, photo, uid } = req.body;
-//         localStorage.setItem('email', email);
-//         localStorage.setItem('name', name);
-//         localStorage.setItem('photo', photo);
-//         localStorage.setItem('uid', uid);
-//         const db = getFirestore(app);
-//             setDoc(doc(db, 'users', userUID), {
-//                 email: userEmail,
-//                 name: userDisplayName,
-//                 photo: userPhoto,
-//             }, { merge: true });
-//         res.json({
-//             message: 'Success',
-//         })
-//     } catch (error) {
-//         console.error(error);
-//     }
-// });
 
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)
