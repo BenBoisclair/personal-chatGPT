@@ -3,6 +3,7 @@ import ChatMessage from './ChatMessage';
 import AuthDetails from './AuthDetails';
 import LogOut from './LogOut';
 import LoadingChat from './LoadingChat';
+import Home from './Home';
 
 import { auth, app } from '../firebase';
 import { getFirestore } from "firebase/firestore";
@@ -86,9 +87,18 @@ function PersonalAssistant() {
     if(chatLog.length < 2 || isLoading) {
       return;
     }
+
+    const currentLogIndex = currentLog !== null ? chatHistory.findIndex((chat) => chat.id === currentLog) : -1;
+
+    if (currentLogIndex >= 0) {
+      setChatLog([defaultPrompt]);
+      setCurrentLog(null);
+      return;
+    }
+
     setCurrentLog(null);
     setChatLoading(true);
-    const summarizeChatLog = [...chatLog, {role: "user", content: 'Describe this conversation in 3 words. Use Keywords. Separate with a comma.'}];
+    const summarizeChatLog = [...chatLog, {role: "user", content: 'What is the main topic of this conversation in one sentence? Keep it to 5 words or less.'}];
     try {
       const response = await fetch('http://localhost:3001/summarize', {
         method: 'POST',
@@ -297,15 +307,6 @@ const ClearConversationButton = ({onClick, clearConversationsText}) => {
   return (
     <div className="side-menu-button clear-conversation-button" onClick={onClick}>
       {clearConversationsText}
-    </div>
-  )
-}
-
-const Home = () => {
-  return (
-    <div className="home">
-      <h1>Welcome to your personal assistant</h1>
-      <p>Made by Benedict Boisclair</p>
     </div>
   )
 }
