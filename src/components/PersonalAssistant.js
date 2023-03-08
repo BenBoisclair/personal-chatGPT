@@ -4,7 +4,7 @@ import AuthDetails from './AuthDetails';
 import LogOut from './LogOut';
 import LoadingChat from './LoadingChat';
 
-import { auth, provider, app } from '../firebase';
+import { auth, app } from '../firebase';
 import { getFirestore } from "firebase/firestore";
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from 'firebase/auth';
@@ -19,6 +19,7 @@ function PersonalAssistant() {
   const [isLoading, setIsLoading] = useState(false);
   const [clearConversationsText, setClearConversationsText] = useState('Clear All Conversations');
   const [clearConversationConfirm, setClearConversationConfirm] = useState(false);
+  const [clearConversationTimer, setClearConversationTimer] = useState(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const messagesEndRef = useRef(null);
@@ -42,6 +43,10 @@ function PersonalAssistant() {
     if (isLoading) {
       return; 
     }
+    if (input === '') {
+      return;
+    }
+
     const newChatLog = [...chatLog, {role: "user", content: `${input}`}];
     setChatLog(newChatLog);
     await setInput("");
@@ -61,6 +66,17 @@ function PersonalAssistant() {
       const content = data.message.content;
       await setChatLog([...newChatLog, {role: "assistant", content: `${content}`}]);
       setIsLoading(false);
+
+      const newLog = [...newChatLog, {role: "assistant", content: `${content}`}];
+      if (chatHistory.length > 0) {
+        const currentLogIndex = chatHistory.map(chat => JSON.stringify(chat.chatLog)).indexOf(JSON.stringify(chatLog));
+        if (currentLogIndex >= 0) {
+          const updatedChatLog = {...chatHistory[currentLogIndex], chatLog: newLog};
+          const updatedChatHistory = [...chatHistory];
+          updatedChatHistory[currentLogIndex] = updatedChatLog;
+          setChatHistory(updatedChatHistory);
+        }
+      }
     } catch (error) {
       setIsLoading(true);
     }
@@ -130,12 +146,22 @@ function handleClearConversationsClick() {
   if (chatHistory.length === 0) {
     return;
   }
+  if (clearConversationTimer) {
+    clearTimeout(clearConversationTimer);
+    setClearConversationTimer(null);
+  }
   if (clearConversationConfirm) {
+    setClearConversationsText('Clearing...');
     clearConversations();
     setClearConversationConfirm(false);
   } else {
     setClearConversationsText('Are you sure?');
     setClearConversationConfirm(true);
+    const timer = setTimeout(() => {
+      setClearConversationsText('Clear All Conversations');
+      setClearConversationConfirm(false);
+    }, 5000);
+    setClearConversationTimer(timer);
   }
 }
   
