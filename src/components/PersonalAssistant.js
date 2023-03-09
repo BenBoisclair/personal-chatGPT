@@ -23,6 +23,7 @@ function PersonalAssistant() {
   const [clearConversationTimer, setClearConversationTimer] = useState(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [deleteToggle, setDeleteToggle] = useState(false);
   const messagesEndRef = useRef(null);
   const maxRows = 10;
 
@@ -149,31 +150,42 @@ function PersonalAssistant() {
   }
 
 
-function handleClearConversationsClick() {
-  if (chatHistoryLoaded === false) {
-    return;
-  }
-  if (chatHistory.length === 0) {
-    return;
-  }
-  if (clearConversationTimer) {
-    clearTimeout(clearConversationTimer);
-    setClearConversationTimer(null);
-  }
-  if (clearConversationConfirm) {
-    setClearConversationsText('Clearing...');
-    clearConversations();
-    setClearConversationConfirm(false);
-  } else {
-    setClearConversationsText('Are you sure?');
-    setClearConversationConfirm(true);
-    const timer = setTimeout(() => {
-      setClearConversationsText('Clear All Conversations');
+  function handleClearConversationsClick() {
+    if (chatHistoryLoaded === false) {
+      return;
+    }
+    if (chatHistory.length === 0) {
+      return;
+    }
+    if (clearConversationTimer) {
+      clearTimeout(clearConversationTimer);
+      setClearConversationTimer(null);
+    }
+    if (clearConversationConfirm) {
+      setClearConversationsText('Clearing...');
+      clearConversations();
       setClearConversationConfirm(false);
-    }, 5000);
-    setClearConversationTimer(timer);
+    } else {
+      setClearConversationsText('Are you sure?');
+      setClearConversationConfirm(true);
+      const timer = setTimeout(() => {
+        setClearConversationsText('Clear All Conversations');
+        setClearConversationConfirm(false);
+      }, 5000);
+      setClearConversationTimer(timer);
+    }
   }
-}
+
+  function handleDelete (e) {
+    const chatLogId = parseInt(e.target.dataset.id)
+    const updatedChatHistory = chatHistory.filter((chat) => chat.id !== chatLogId);
+    setChatHistory(updatedChatHistory);
+    setDeleteToggle(false);
+  }
+
+  function handleToggleDelete (e) {
+    setDeleteToggle(!deleteToggle);
+  }
   
   
   useEffect(() => {
@@ -229,7 +241,8 @@ function handleClearConversationsClick() {
       <aside className="sidemenu">
         <AuthDetails name={localStorage.getItem('name')}/>
         <NewChatButton onClick={clearChat}/>
-        <ChatHistoryContainer chatHistory={chatHistory} setChatLogButton={setChatLogButton} currentLog={currentLog} chatHistoryLoaded={chatHistoryLoaded} chatLoading={chatLoading}/>
+        <ChatHistoryContainer deleteToggle={deleteToggle} handleDelete={handleDelete} chatHistory={chatHistory} setChatLogButton={setChatLogButton} currentLog={currentLog} chatHistoryLoaded={chatHistoryLoaded} chatLoading={chatLoading}/>
+        <DeleteConversationButton onClick={handleToggleDelete}/>
         <ClearConversationButton onClick={handleClearConversationsClick} clearConversationsText={clearConversationsText}/>
         <LogOut/>
       </aside>
@@ -243,6 +256,14 @@ function handleClearConversationsClick() {
 
 export default PersonalAssistant;
 
+const DeleteConversationButton = ({ onClick = null, deleteToggle = null }) => {
+  return (
+    <div className="side-menu-button delete-conversation-button" onClick={onClick}>
+      Delete Conversation
+    </div>
+  )
+}
+
 const ChatInput = ({ input, handleInput, handleSubmit, handleKeyDown }) => {
   return (
     <div className="chat-input-holder">
@@ -254,7 +275,7 @@ const ChatInput = ({ input, handleInput, handleSubmit, handleKeyDown }) => {
   )
 }
 
-const ChatHistory = ({ chat, keyID, onClick = null, currentLog = null}) => {
+const ChatHistory = ({ chat, keyID, onClick = null, currentLog = null, deleteToggle = null, handleDelete=null}) => {
 
   function toTitleCase(str) {
     return str.replace(/\b\w+/g, function(txt){
@@ -264,18 +285,18 @@ const ChatHistory = ({ chat, keyID, onClick = null, currentLog = null}) => {
 
   return (
     <div className={`chat-history-item ${currentLog === chat.id ? 'highlight' : ''} ${currentLog === 'loading' ? 'chatLoading' : ''}`} key={keyID} title={toTitleCase(chat.name)} onClick={onClick} data-id={chat.id}>
-      <span>{toTitleCase(chat.name)}</span>
+      {toTitleCase(chat.name)}{currentLog !== 'loading' && deleteToggle ? <button onClick={handleDelete} class='chat-history-delete' data-id={chat.id}>Delete</button> : null}
     </div>
   )
 }
 
-const ChatHistoryContainer = ({ chatHistory, setChatLogButton = null, currentLog = null, chatLoading, chatHistoryLoaded}) => {
+const ChatHistoryContainer = ({ chatHistory, setChatLogButton = null, currentLog = null, chatLoading, chatHistoryLoaded, deleteToggle = null, handleDelete}) => {
   return (
     <div className='chat-history-container'>
       {chatHistoryLoaded ?
       <div>
         {chatHistory.map((chat, index) => (
-          <ChatHistory keyID={index} chat={chat} onClick={setChatLogButton} currentLog={currentLog}/>
+          <ChatHistory keyID={index} chat={chat} onClick={deleteToggle ? null : setChatLogButton} currentLog={currentLog} deleteToggle={deleteToggle} handleDelete={handleDelete}/>
         ))}
         {chatLoading ? <ChatHistory chat={{name: ''}} currentLog='loading'/> : ''}
       </div> : <div className="loader"></div>}

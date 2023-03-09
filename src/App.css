@@ -86,14 +86,20 @@ p {
   border-radius: 5px; 
 }
 
-.side-menu-button.log-out-button {
-  order: 2;
+.side-menu-button.delete-conversation-button {
+  order: 1;
+  margin-top: auto;
+  margin-bottom: 6px;
 }
 
+.side-menu-button.log-out-button {
+  order: 3;
+}
+
+
 .side-menu-button.clear-conversation-button {
-  order: 1;
+  order: 2;
   margin-bottom: 6px;
-  margin-top: auto;
 }
 
 .side-menu-button:hover {
@@ -136,9 +142,10 @@ p {
 
 .chat-history-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 15px;
+  position: relative;
   margin-top: 5px;
   font-size: 14px;
   text-align: left;
@@ -155,6 +162,14 @@ p {
   align-items: center;
   transition: ease 0.25s all;
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+button.chat-history-delete {
+  position: absolute;
+  background-color: rgba(200, 0, 0, 1);
+  right: 0;
+  font-size: 14px;
+  height: 100%;
 }
 
 .highlight {

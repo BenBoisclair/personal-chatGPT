@@ -1,4 +1,3 @@
-// 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
 const { Configuration, OpenAIApi } = require("openai");
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -24,7 +23,9 @@ app.post('/', async (req, res) => {
         const completion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: messages,
-            temperature: 0.9,
+            temperature: 0.7,
+            presence_penalty: 0.6,
+            frequency_penalty: 0.5,
         });
         res.json({
             message: completion.data.choices[0].message,
@@ -40,7 +41,7 @@ app.post('/summarize', async (req, res) => {
         const completion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: messages,
-            temperature: 0.9,
+            temperature: 0.3,
             max_tokens: 50,
         });
         res.json({
