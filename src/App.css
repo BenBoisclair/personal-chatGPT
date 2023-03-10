@@ -138,6 +138,7 @@ p {
   resize: none;
   overflow-y: auto;
   overflow-x: hidden;
+  transition: ease 0.25s all;
 }
 
 .chat-history-item {
@@ -153,7 +154,6 @@ p {
   border-radius: 5px;
   cursor: pointer;
   transition: ease 0.25s all;
-  
 }
 
 .chat-history-item:hover {
@@ -350,8 +350,8 @@ pre code {
   border-radius: 50%;
   align-self: center;
   margin-top: 100px;
-  width: 50px;
-  height: 50px;
+  width: 65px;
+  height: 65px;
   animation: spin 1s ease-in-out infinite;
 }
 

@@ -291,14 +291,25 @@ const ChatHistory = ({ chat, keyID, onClick = null, currentLog = null, deleteTog
 }
 
 const ChatHistoryContainer = ({ chatHistory, setChatLogButton = null, currentLog = null, chatLoading, chatHistoryLoaded, deleteToggle = null, handleDelete}) => {
+
+  function reverse (chatHistory) {
+    let newChatHistory = [];
+    for (let i = chatHistory.length - 1; i >= 0; i--) {
+      newChatHistory.push(chatHistory[i]);
+    }
+    return newChatHistory;
+  }
+
+  const reversedChatHistory = reverse(chatHistory);
+
   return (
     <div className='chat-history-container'>
       {chatHistoryLoaded ?
       <div>
-        {chatHistory.map((chat, index) => (
+        {chatLoading ? <ChatHistory chat={{name: ''}} currentLog='loading'/> : ''}
+        {reversedChatHistory.map((chat, index) => (
           <ChatHistory keyID={index} chat={chat} onClick={deleteToggle ? null : setChatLogButton} currentLog={currentLog} deleteToggle={deleteToggle} handleDelete={handleDelete}/>
         ))}
-        {chatLoading ? <ChatHistory chat={{name: ''}} currentLog='loading'/> : ''}
       </div> : <div className="loader"></div>}
     </div>
   )
